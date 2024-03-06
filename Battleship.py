@@ -12,9 +12,11 @@ class Battleship():
     KEYS = {letter:index for index, letter in enumerate(string.ascii_lowercase[:MATRIX_SIZE])}
 
 
-    def __init__(self) -> None:
+    def __init__(self, turn) -> None:
         self._board = self._create_board()
         self._ship_count = self.SHIPS
+        # turn 1 or 2
+        self.turn = turn
     
     def _create_board(self) -> List[List[str]]:
         """
@@ -75,6 +77,13 @@ class Battleship():
         return True, xpos, ypos
     
     def play_game(self):
+        # if it's your turn, you can start otherwise:
+        
+        # check for opponents turn
+
+        # do your turn
+        pass
+
 
 
         
