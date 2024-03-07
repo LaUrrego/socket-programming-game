@@ -1,4 +1,5 @@
 import socket
+from Battleship import *
 
 IP = "127.0.0.1"
 PORT = 2222
@@ -11,20 +12,74 @@ server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 server_socket.bind((IP, PORT))
 server_socket.listen(1)
+print(f'Server running on: ({IP, PORT})')
 
-def welcome_msg():
-    message = "You have connected with the server!"
-    message_header = len(message)
-    result = bytes(f'{message_header}:<{{HEADER}}{message}')
+def welcome_msg() -> bytes:
+    """
+    Welcome message and first communication by the server
+    """
+    message = '\n############################\nYou have connected with the server! Enter /q to quit anytime.\nYou will be prompted to enter message.\nEnter /battle to play ShipBattle, the Un-BattleShip!\n############################\n'.encode('utf-8')
+    message_header = f'{len(message):<{HEADER}}'.encode('utf-8')
+    return message_header + message
 
+def send_message(conn, message = None) -> str:
+    """
+    Function to send messages within chat. Ensures a strict 4096 byte limit, including header
+    """
+    while True:
+        to_send = input("Enter Input > ") if not message else message
+        message_header = f'{len(to_send):<{HEADER}}'.encode('utf-8')
+        message_body = to_send.encode('utf-8')
+        # ensure that the header and message don't exceed our 4096 byte sending limit
+        if len(message_header + message_body) > 4096:
+            print("Message is too long, try again.")
+        else:
+            break
+
+    conn.send(message_header + message_body)
+    return to_send
+
+def receive_message(conn) -> str:
+    """
+    Function to send messages within chat. Only receives as much as it needs
+    """
+    message_header = conn.recv(HEADER)
+    if not message_header:
+        return "(empty message)"
+    message_length = int(message_header.decode('utf-8').strip())
+    message_body = conn.recv(message_length)
+    return message_body.decode('utf-8')
 
 
 while True:
     conn, addr = server_socket.accept()
-    print(f"Connected to: {addr}")
-    message_header = str(len())
-
+    print(f"Connected to client: {addr}")
+    # initial contact by the server, welcoming the client
     conn.send(welcome_msg())
+
+    while True:
+        received = receive_message(conn)
+        if received == '/q':
+            print("Connection shutting down!")
+            break
+        elif received == '/battle':
+            start = Battleship(2)
+            start.play_game(conn, send_message, receive_message)
+            message_body = '/battle'.encode('utf-8')
+            message_header = f'{len(message_body):<{HEADER}}'.encode('utf-8')
+        
+        else:
+            print(f"Client: {received}")
+
+        sent = send_message(conn)
+        if sent == '/q':
+            print("Connection shutting down!")
+            break
+
+    conn.close()
+    break
+
+server_socket.close()
 
     
 
