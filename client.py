@@ -1,5 +1,6 @@
 import socket
 from Battleship import *
+from Colors import ColorsFg
 
 IP = "127.0.0.1"
 PORT = 2222
@@ -16,7 +17,7 @@ def send_message(conn, message = None) -> str:
     Function to send messages within chat. Ensures a strict 4096 byte limit, including header
     """
     while True:
-        to_send = input("Enter Input > ") if not message else message
+        to_send = input(f"{ColorsFg.lightcyan}Enter Input >{ColorsFg.reset} ") if not message else message
         message_header = f'{len(to_send):<{HEADER}}'.encode('utf-8')
         message_body = to_send.encode('utf-8')
         # ensure that the header and message don't exceed our 4096 byte sending limit
@@ -43,18 +44,19 @@ while True:
     # communication initiated by the server
     received = receive_message(client_socket)
     if received == '/q':
-        print("Connection shutting down!")
+        print(f"{ColorsFg.yellow}Connection shutting down!{ColorsFg.reset}")
         break
     
-    print(f'Server: {received}')
+    print(f'{ColorsFg.green}Server:{ColorsFg.reset} {received}')
 
     sent = send_message(client_socket)
     if sent == '/q':
-        print("Connection shutting down!")
+        print(f"{ColorsFg.yellow}Connection shutting down!{ColorsFg.reset}")
         break
     elif sent == '/battle':
         start = Battleship(1)
         start.play_game(client_socket, send_message, receive_message)
+        print("\nWelcome back to chat!\nWaiting on the server...\n")
 
     
 client_socket.close()

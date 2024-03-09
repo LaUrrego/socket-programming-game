@@ -36,3 +36,12 @@ class ColorsBg:
     purple = '\033[45m'
     cyan = '\033[46m'
     lightgrey = '\033[47m'
+
+# # Function to print "Hello, World!" in different colors
+# def print_colored_hello():
+#     for color in [ColorsFg.black, ColorsFg.red, ColorsFg.green, ColorsFg.orange, ColorsFg.blue, ColorsFg.purple, ColorsFg.cyan, ColorsFg.lightgrey, ColorsFg.darkgrey, ColorsFg.lightred, ColorsFg.lightgreen, ColorsFg.yellow, ColorsFg.lightblue, ColorsFg.pink, ColorsFg.lightcyan]:
+#         print(color + "Hello, World!" + ColorsFg.reset)
+#     for color in [ColorsBg.black, ColorsBg.red, ColorsBg.green, ColorsBg.orange, ColorsBg.blue, ColorsBg.purple, ColorsBg.cyan, ColorsBg.lightgrey]:
+#         print(color + "Hello, World!" + ColorsFg.reset)
+
+# print_colored_hello()
