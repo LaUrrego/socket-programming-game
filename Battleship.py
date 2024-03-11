@@ -8,7 +8,6 @@ import time
 class Battleship():
     # size range is 10 or less
     MATRIX_SIZE = 6
-    # should be half the size or less
     SHIPS = 5
     SHIP_PIECE = "o"
     SHIP_COLOR = ColorsFg.cyan
